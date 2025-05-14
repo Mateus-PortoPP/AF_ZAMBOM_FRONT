@@ -1,0 +1,41 @@
+# AF_ZAMBOM_FRONT - Requirements
+# Frontend React + TypeScript Application
+
+# Node.js dependencies are managed through package.json
+# This file serves as documentation for the project dependencies
+
+# Runtime Dependencies
+react=18.3.1
+react-dom=18.3.1
+@auth0/auth0-react=2.3.0
+axios=1.9.0
+lucide-react=0.344.0
+
+# Development Dependencies
+typescript=5.8.3
+vite=5.4.19
+@vitejs/plugin-react=4.4.1
+@types/react=18.3.21
+@types/react-dom=18.3.7
+eslint=9.26.0
+@eslint/js=9.26.0
+eslint-plugin-react-hooks=5.2.0
+eslint-plugin-react-refresh=0.4.20
+globals=15.15.0
+typescript-eslint=8.32.1
+tailwindcss=3.4.17
+postcss=8.5.3
+autoprefixer=10.4.21
+
+# Environment Configuration
+# Create a .env file with the following variables:
+# VITE_API_URL=http://18.230.226.30:8080/api/ferramentas
+# VITE_AUTH0_DOMAIN=your-auth0-domain.auth0.com
+# VITE_AUTH0_CLIENT_ID=your-auth0-client-id
+
+# Project Setup Instructions
+# 1. Clone the repository
+# 2. Install dependencies: npm install
+# 3. Configure .env file with Auth0 credentials
+# 4. Start development server: npm run dev
+# 5. Build for production: npm run build

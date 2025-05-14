@@ -1,7 +1,7 @@
 
 import { useAuth } from './auth/AuthContext';
 import LoginPage from './pages/LoginPage';
-import ToolsPage from './pages/ToolsPage';
+import FeedbackPage from './pages/FeedbackPage';
 import { setAuthToken } from './services/api';
 import { useEffect } from 'react';
 
@@ -27,8 +27,8 @@ function App() {
     return <LoginPage />;
   }
 
-  // Render just the tools page
-  return <ToolsPage />;
+  // Render just the feedback page
+  return <FeedbackPage />;
 }
 
 // Remove the custom implementation and import useEffect from React

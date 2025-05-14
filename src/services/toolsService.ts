@@ -7,22 +7,22 @@ const mapToFrontendTool = (backendTool: any): Tool => {
   return {
     ...backendTool,
     // Map backend properties to frontend properties
-    name: backendTool.nome,
+    title: backendTool.titulo,
     description: backendTool.descricao,
-    category: backendTool.categoria,
+    rating: backendTool.nota,
   };
 };
 
 // Helper function to map frontend data to backend model
 const mapToBackendTool = (frontendTool: any): any => {
-  const { name, description, category, ...rest } = frontendTool;
+  const { title, description, rating, ...rest } = frontendTool;
   
   return {
     ...rest,
     // Map frontend properties to backend properties
-    nome: name || frontendTool.nome,
+    titulo: title || frontendTool.titulo,
     descricao: description || frontendTool.descricao,
-    categoria: category || frontendTool.categoria,
+    nota: rating || frontendTool.nota,
   };
 };
 

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import { Tool } from '../types';
 
-interface ToolFormProps {
+interface FeedbackFormProps {
   tool?: Tool;
   onSave: (tool: Tool) => void;
   onCancel: () => void;
-  categories?: string[]; // Mantido para compatibilidade
 }
 
-const ToolForm: React.FC<ToolFormProps> = ({ tool, onSave, onCancel }) => {
+const FeedbackForm: React.FC<FeedbackFormProps> = ({ tool, onSave, onCancel }) => {
   const [titulo, setTitulo] = useState('');
   const [descricao, setDescricao] = useState('');
   const [nota, setNota] = useState<number>(5);
@@ -62,6 +61,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ tool, onSave, onCancel }) => {
     onSave(updatedTool);
     resetForm();
   };
+
   const resetForm = () => {
     setTitulo('');
     setDescricao('');
@@ -147,7 +147,7 @@ const ToolForm: React.FC<ToolFormProps> = ({ tool, onSave, onCancel }) => {
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
             >
-              {tool ? 'Atualizar' : 'Criar'}
+              {tool ? 'Atualizar' : 'Enviar'}
             </button>
           </div>
         </form>
@@ -156,4 +156,4 @@ const ToolForm: React.FC<ToolFormProps> = ({ tool, onSave, onCancel }) => {
   );
 };
 
-export default ToolForm;
+export default FeedbackForm;

@@ -1,117 +1,100 @@
 import React, { useEffect, useState } from 'react';
-import { fetchTools, createTool, updateTool, deleteTool } from '../services/toolsService';
+import { fetchTools, createTool, deleteTool } from '../services/toolsService';
 import { Tool } from '../types';
 import Header from '../components/Header';
 import ConfirmDialog from '../components/ConfirmDialog';
 import ToolForm from '../components/ToolForm';
 import { useAuth } from '../auth/AuthContext';
-import { Wrench, Edit2, Trash2, Plus, Tag } from 'lucide-react';
+import { MessageSquare, Star, Trash2, Plus, Search } from 'lucide-react';
 
 const ToolsPage: React.FC = () => {
   const { user } = useAuth();
-  const [tools, setTools] = useState<Tool[]>([]);  const [loading, setLoading] = useState<boolean>(true);
+  const [feedbacks, setFeedbacks] = useState<Tool[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [categories, setCategories] = useState<string[]>([]);
-  const [toolToDelete, setToolToDelete] = useState<string | null>(null);
+  const [feedbackToDelete, setFeedbackToDelete] = useState<string | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState<boolean>(false);
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-  const [currentTool, setCurrentTool] = useState<Tool | undefined>(undefined);
+  const [currentFeedback, setCurrentFeedback] = useState<Tool | undefined>(undefined);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   
-  // Load tools from API
+  // Load feedbacks from API
   useEffect(() => {
-    const loadTools = async () => {
+    const loadFeedbacks = async () => {
       try {
         setLoading(true);
-        const toolsData = await fetchTools();
-        setTools(toolsData);
+        const feedbackData = await fetchTools();
+        setFeedbacks(feedbackData);
         
-        // Extract categories
-        const uniqueCategories = Array.from(
-          new Set(toolsData.map(tool => tool.category || tool.categoria || ''))
-        ).filter(cat => cat !== '');
+        // Check if user is an admin
+        if (user?.email) {
+          // Assuming roles are in user claims or token
+          // This is a simplification - in real app you would check the token claims
+          setIsAdmin(user.email.includes('admin') || user['https://app/roles']?.includes('ADMIN'));
+        }
         
-        setCategories(uniqueCategories);
         setError(null);
       } catch (err) {
-        console.error('Failed to fetch tools:', err);
-        setError('Erro ao carregar ferramentas. Por favor, tente novamente mais tarde.');
+        console.error('Failed to fetch feedbacks:', err);
+        setError('Erro ao carregar feedbacks. Por favor, tente novamente mais tarde.');
       } finally {
         setLoading(false);
       }
     };
     
-    loadTools();
-  }, []);
+    loadFeedbacks();
+  }, [user]);
   
-  // Filter tools based on search term and category
-  const filteredTools = tools.filter(tool => {
-    const name = tool.name || tool.nome || '';
-    const description = tool.description || tool.descricao || '';
-    const category = tool.category || tool.categoria || '';
+  // Filter feedbacks based on search term
+  const filteredFeedbacks = feedbacks.filter(feedback => {
+    const title = feedback.title || feedback.titulo || '';
+    const description = feedback.description || feedback.descricao || '';
     
     const matchesSearch = searchTerm === '' || 
-      name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      title.toLowerCase().includes(searchTerm.toLowerCase()) || 
       description.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesCategory = selectedCategory === 'all' || category === selectedCategory;
-    
-    return matchesSearch && matchesCategory;
+    return matchesSearch;
   });
-  
-  const handleSearch = (term: string) => {
+    const handleSearch = (term: string) => {
     setSearchTerm(term);
   };
   
-  const handleSelectCategory = (category: string) => {
-    setSelectedCategory(category);
-  };
-  
-  const handleDeleteTool = (toolId: string) => {
-    setToolToDelete(toolId);
+  const handleDeleteFeedback = (feedbackId: string) => {
+    setFeedbackToDelete(feedbackId);
     setIsConfirmOpen(true);
   };
   
   const confirmDelete = async () => {
-    if (toolToDelete) {
+    if (feedbackToDelete) {
       try {
-        await deleteTool(toolToDelete);
-        setTools(tools.filter(tool => tool.id !== toolToDelete));
+        await deleteTool(feedbackToDelete);
+        setFeedbacks(feedbacks.filter(feedback => feedback.id !== feedbackToDelete));
       } catch (err) {
-        console.error('Failed to delete tool:', err);
-        setError('Erro ao deletar ferramenta. Por favor, tente novamente.');
+        console.error('Failed to delete feedback:', err);
+        setError('Erro ao deletar feedback. Por favor, tente novamente.');
       }
     }
     setIsConfirmOpen(false);
-    setToolToDelete(null);
+    setFeedbackToDelete(null);
   };
-    const handleAddTool = () => {
-    setCurrentTool(undefined); // Limpa qualquer ferramenta selecionada anteriormente
-    setIsFormOpen(true); // Abre o formulário para criar uma nova ferramenta
-  };
-  
-  const handleEditTool = (tool: Tool) => {
-    setCurrentTool(tool); // Define a ferramenta atual para edição
-    setIsFormOpen(true); // Abre o formulário com os dados da ferramenta
+
+  const handleAddFeedback = () => {
+    setCurrentFeedback(undefined); // Limpa qualquer feedback selecionado anteriormente
+    setIsFormOpen(true); // Abre o formulário para criar um novo feedback
   };
   
-  const handleSaveTool = async (tool: Tool) => {
+  // Users can't edit feedback - only submit new ones
+    const handleSaveFeedback = async (feedback: Tool) => {
     try {
       setLoading(true);
-      let savedTool: Tool;
+      let savedFeedback: Tool;
       
-      if (tool.id) {
-        // Atualizar ferramenta existente
-        savedTool = await updateTool(tool.id, tool);
-        // Atualizar a ferramenta na lista local
-        setTools(tools.map(t => t.id === savedTool.id ? savedTool : t));
-      } else {
-        // Criar nova ferramenta
-        savedTool = await createTool(tool);
-        // Adicionar nova ferramenta à lista local
-        setTools([savedTool, ...tools]);
-      }
+      // Criar novo feedback (edição não é permitida, apenas criação de novos)
+      savedFeedback = await createTool(feedback);
+      // Adicionar novo feedback à lista local
+      setFeedbacks([savedFeedback, ...feedbacks]);
       
       // Atualizar categorias
       const uniqueCategories = Array.from(

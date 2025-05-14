@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Plus, Wrench, LogOut, User } from 'lucide-react';
+import { Search, Plus, MessageSquare, LogOut, User } from 'lucide-react';
 import { useAuth } from '../auth/AuthContext';
 
 interface HeaderProps {
@@ -19,8 +19,8 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onAddNote }) => {
       <div className="container mx-auto px-4 py-3">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center">
-            <Wrench className="h-6 w-6 text-blue-500 mr-2" />
-            <h1 className="text-xl font-semibold text-gray-800">Gerenciador de Ferramentas</h1>
+            <MessageSquare className="h-6 w-6 text-blue-500 mr-2" />
+            <h1 className="text-xl font-semibold text-gray-800">Sistema de Feedback</h1>
           </div>
           
           <div className="flex items-center gap-2 w-full md:w-auto">
@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onAddNote }) => {
               <input
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
-                placeholder="Buscar ferramentas..."
+                placeholder="Buscar feedbacks..."
                 onChange={handleSearch}
               />
             </div>
@@ -40,7 +40,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch, onAddNote }) => {
               className="flex items-center gap-1 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2.5 rounded-lg transition-colors duration-200"
             >
               <Plus className="h-4 w-4" />
-              <span className="hidden md:inline">Adicionar Ferramenta</span>
+              <span className="hidden md:inline">Enviar Feedback</span>
             </button>
             
             {/* User info e botão de logout */}

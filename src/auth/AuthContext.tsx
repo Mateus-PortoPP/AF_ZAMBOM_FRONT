@@ -24,11 +24,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setToken(accessToken);
           // Set the token for API calls
           setAuthToken(accessToken);
-          
-          // Criar um objeto de usuário para nossa aplicação
+            // Criar um objeto de usuário para nossa aplicação
           // Considerando administradores por email por enquanto
           // Em uma implementação real, isso seria baseado em roles do Auth0 ou verificação com backend
           const isAdmin = user.email?.includes('admin') || false;
+          console.log('User authenticated:', { email: user.email, isAdmin });
+          
           setAppUser({
             email: user.email || '',
             isAdmin
